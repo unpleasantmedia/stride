@@ -223,6 +223,11 @@
     <Project Path="sources/plugins/Particles/Stride.Particles.Tests/Stride.Particles.Tests.csproj" />
     <Project Path="sources/plugins/Particles/Stride.Particles/Stride.Particles.csproj" />
   </Folder>
+  <Folder Name="/80-Plugins/Roads/">
+    <Project Path="sources/plugins/Roads/Stride.Roads.Editor/Stride.Roads.Editor.csproj" />
+    <Project Path="sources/plugins/Roads/Stride.Roads.Tests/Stride.Roads.Tests.csproj" />
+    <Project Path="sources/plugins/Roads/Stride.Roads/Stride.Roads.csproj" />
+  </Folder>
   <Folder Name="/80-Plugins/SpriteStudio/">
     <Project Path="sources/plugins/SpriteStudio/Stride.SpriteStudio.Assets/Stride.SpriteStudio.Assets.csproj" />
     <Project Path="sources/plugins/SpriteStudio/Stride.SpriteStudio.Editor/Stride.SpriteStudio.Editor.csproj" />
