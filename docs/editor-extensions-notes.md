@@ -101,7 +101,7 @@ Three hooks, all editor game services declared with `[EditorGameService(typeof(E
 
 | Hook | Shows as | Use for | Notes |
 |---|---|---|---|
-| `IEditorGameToolService` (fork) | A toggle button per `EditorTool`, at the start of the viewport toolbar | Modes (Roads' draw mode) | The tool raises `ActiveChanged` when it turns on or off another way, and the button follows. |
+| `IEditorGameToolService` (fork) | A toggle button per `EditorTool`, at the start of the viewport toolbar | Modes (Roads' draw mode) | The tool raises `Changed` when it turns on or off another way, or becomes available or not (the button hides while unavailable), and the button follows. |
 | `IEditorGameOverlayService` (upstream) | A checkbox per `EditorOverlay` in the Overlays popup | Things a service draws | One way only: the popup can't follow a change made elsewhere, and the state is saved with the scene. Not for modes. |
 | `IEditorGameToolbarService` (fork) | Any WPF controls the service makes, after the tool buttons | Anything else (drop-downs, several buttons) | `CreateToolbarItems()` is called once on the UI thread after the game content loads; the service keeps its controls up to date. |
 

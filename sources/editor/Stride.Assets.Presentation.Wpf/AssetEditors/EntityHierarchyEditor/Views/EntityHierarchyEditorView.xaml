@@ -501,7 +501,8 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                   <DataTemplate DataType="{x:Type ehvm:EditorToolViewModel}">
-                    <ToggleButton IsChecked="{Binding IsActive}" ToolTip="{Binding DisplayName}" MinWidth="28" Height="28" Background="Transparent">
+                    <ToggleButton IsChecked="{Binding IsActive}" ToolTip="{Binding DisplayName}" MinWidth="28" Height="28" Background="Transparent"
+                                  Visibility="{Binding IsAvailable, Converter={sd:VisibleOrCollapsed}}">
                       <Grid>
                         <Image Source="{Binding Icon}" Width="16" Height="16" RenderOptions.BitmapScalingMode="NearestNeighbor"
                                Visibility="{Binding HasIcon, Converter={sd:VisibleOrCollapsed}}"/>

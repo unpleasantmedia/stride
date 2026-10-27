@@ -26,19 +26,23 @@ namespace Stride.Assets.Presentation.AssetEditors.EntityHierarchyEditor.Services
     {
         private readonly Func<bool> isActive;
         private readonly Action<bool> setActive;
+        private readonly Func<bool> isAvailable;
 
         /// <param name="key">Identifies the tool; unique across services.</param>
         /// <param name="displayName">The button's tooltip: the tool's name, with its shortcut if it has one.</param>
         /// <param name="icon">The button's image, as PNG data, or null for its name instead.</param>
         /// <param name="isActive">Whether the tool is on.</param>
         /// <param name="setActive">Turns the tool on or off. Called from the UI thread: the service marshals to the game thread itself.</param>
-        public EditorTool([NotNull] string key, [NotNull] string displayName, [CanBeNull] byte[] icon, [NotNull] Func<bool> isActive, [NotNull] Action<bool> setActive)
+        /// <param name="isAvailable">Whether the tool can be used now (its button shows only then), or null for always. Called from the UI thread.</param>
+        public EditorTool([NotNull] string key, [NotNull] string displayName, [CanBeNull] byte[] icon, [NotNull] Func<bool> isActive, [NotNull] Action<bool> setActive,
+            [CanBeNull] Func<bool> isAvailable = null)
         {
             Key = key ?? throw new ArgumentNullException(nameof(key));
             DisplayName = displayName ?? throw new ArgumentNullException(nameof(displayName));
             Icon = icon;
             this.isActive = isActive ?? throw new ArgumentNullException(nameof(isActive));
             this.setActive = setActive ?? throw new ArgumentNullException(nameof(setActive));
+            this.isAvailable = isAvailable;
         }
 
         public string Key { get; }
@@ -54,9 +58,15 @@ namespace Stride.Assets.Presentation.AssetEditors.EntityHierarchyEditor.Services
         public bool IsActive => isActive();
 
         /// <summary>
-        /// Raised when the tool turns on or off other than through its button (a shortcut, say), from any thread.
+        /// Whether the tool can be used now: its button shows only then (as a tool that needs something selected).
         /// </summary>
-        public event EventHandler ActiveChanged;
+        public bool IsAvailable => isAvailable?.Invoke() ?? true;
+
+        /// <summary>
+        /// Raised when the tool turns on or off other than through its button (a shortcut, say), or becomes available or
+        /// not, from any thread.
+        /// </summary>
+        public event EventHandler Changed;
 
         /// <summary>
         /// Turns the tool on or off. Called from the UI thread.
@@ -64,8 +74,8 @@ namespace Stride.Assets.Presentation.AssetEditors.EntityHierarchyEditor.Services
         public void SetActive(bool active) => setActive(active);
 
         /// <summary>
-        /// Tells the toolbar the tool has turned on or off. Safe from any thread.
+        /// Tells the toolbar the tool has turned on or off, or become available or not. Safe from any thread.
         /// </summary>
-        public void RaiseActiveChanged() => ActiveChanged?.Invoke(this, EventArgs.Empty);
+        public void RaiseChanged() => Changed?.Invoke(this, EventArgs.Empty);
     }
 }

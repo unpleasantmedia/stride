@@ -69,16 +69,27 @@ namespace Stride.Assets.Presentation.AssetEditors.EntityHierarchyEditor.ViewMode
     {
         private readonly EditorTool tool;
         private bool isActive;
+        private bool isAvailable;
 
         public EditorToolViewModel([NotNull] IViewModelServiceProvider serviceProvider, [NotNull] EditorTool tool)
             : base(serviceProvider)
         {
             this.tool = tool ?? throw new ArgumentNullException(nameof(tool));
             isActive = tool.IsActive;
+            isAvailable = tool.IsAvailable;
             Icon = LoadIcon(tool.Icon);
-            // Turned on or off elsewhere (a shortcut): show it, without turning it again
-            tool.ActiveChanged += (sender, e) => Dispatcher.InvokeAsync(() => SetValue(ref isActive, tool.IsActive, nameof(IsActive)));
+            // Turned on or off elsewhere (a shortcut), or now (un)available: show it, without turning it again
+            tool.Changed += (sender, e) => Dispatcher.InvokeAsync(() =>
+            {
+                SetValue(ref isActive, tool.IsActive, nameof(IsActive));
+                SetValue(ref isAvailable, tool.IsAvailable, nameof(IsAvailable));
+            });
         }
+
+        /// <summary>
+        /// Whether the tool can be used now: its button shows only then.
+        /// </summary>
+        public bool IsAvailable => isAvailable;
 
         public string DisplayName => tool.DisplayName;
 
