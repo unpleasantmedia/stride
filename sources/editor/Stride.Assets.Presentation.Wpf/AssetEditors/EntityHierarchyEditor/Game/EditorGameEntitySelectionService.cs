@@ -254,9 +254,20 @@ namespace Stride.Assets.Presentation.AssetEditors.EntityHierarchyEditor.Game
         /// </summary>
         private Entity SelectableOrAncestor(Entity entity)
         {
-            while (entity != null && !SelectableIds.Contains(Editor.Controller.GetAbsoluteId(entity)))
-                entity = entity.Tags.Get(GeneratedEntity.OwnerKey) ?? entity.Transform.Parent?.Entity;
-            return entity;
+            while (entity != null)
+            {
+                // The owner first: a generated entity is usually in no edited scene (the scene instance's root), and
+                // the controller can only give ids of entities that are.
+                if (entity.Tags.Get(GeneratedEntity.OwnerKey) is { } owner)
+                {
+                    entity = owner;
+                    continue;
+                }
+                if (SelectableIds.Contains(Editor.Controller.GetAbsoluteId(entity)))
+                    return entity;
+                entity = entity.Transform.Parent?.Entity;
+            }
+            return null;
         }
 
         public EntityPickingResult Pick()
