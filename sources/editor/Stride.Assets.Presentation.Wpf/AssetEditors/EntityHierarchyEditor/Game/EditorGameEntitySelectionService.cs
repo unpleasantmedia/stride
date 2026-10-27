@@ -246,6 +246,17 @@ namespace Stride.Assets.Presentation.AssetEditors.EntityHierarchyEditor.Game
             return SelectedIds.Contains(entityId);
         }
 
+        /// <summary>
+        /// The given entity if it can be selected, else its nearest ancestor that can: an entity made at edit time
+        /// (by a processor) is not part of the asset, and stands for the entity it was made under.
+        /// </summary>
+        private Entity SelectableOrAncestor(Entity entity)
+        {
+            while (entity != null && !SelectableIds.Contains(Editor.Controller.GetAbsoluteId(entity)))
+                entity = entity.Transform.Parent?.Entity;
+            return entity;
+        }
+
         public EntityPickingResult Pick()
         {
             return entityPicker?.Pick() ?? default(EntityPickingResult);
@@ -487,6 +498,8 @@ namespace Stride.Assets.Presentation.AssetEditors.EntityHierarchyEditor.Game
                             {
                                 entityUnderMouse = instancing.GetInstanceAt(entityPicked.InstanceId)?.Entity ?? entityUnderMouse;
                             }
+
+                            entityUnderMouse = SelectableOrAncestor(entityUnderMouse);
                         }
 
                         // Ctrl + click on an empty area: do nothing
@@ -611,13 +624,7 @@ namespace Stride.Assets.Presentation.AssetEditors.EntityHierarchyEditor.Game
             public override bool IsVisible(RenderObject renderObject, RenderView renderView, RenderViewStage renderViewStage)
             {
                 var entity = (renderObject.Source as EntityComponent)?.Entity;
-                if (entity != null)
-                {
-                    var entityId = service.Editor.Controller.GetAbsoluteId(entity);
-                    return service.SelectableIds.Contains(entityId);
-                }
-
-                return false;
+                return entity != null && service.SelectableOrAncestor(entity) != null;
             }
         }
     }

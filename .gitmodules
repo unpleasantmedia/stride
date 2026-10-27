@@ -1,0 +1,4 @@
+[submodule "sources/plugins/Roads"]
+	path = sources/plugins/Roads
+	url = https://github.com/unpleasantmedia/stride-roads.git
+	branch = main
