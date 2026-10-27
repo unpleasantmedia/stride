@@ -2,23 +2,29 @@
 // Distributed under the MIT license. See the LICENSE.md file in the project root for more information.
 using System;
 using System.IO;
+using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Stride.Assets.Presentation.AssetEditors.EntityHierarchyEditor.Services;
 using Stride.Assets.Presentation.AssetEditors.GameEditor.Services;
 using Stride.Core.Annotations;
 using Stride.Core.Collections;
+using Stride.Core.Diagnostics;
 using Stride.Core.Presentation.Collections;
 using Stride.Core.Presentation.ViewModels;
 
 namespace Stride.Assets.Presentation.AssetEditors.EntityHierarchyEditor.ViewModels
 {
     /// <summary>
-    /// The tool buttons of the scene editor's viewport toolbar: one per tool of each <see cref="IEditorGameToolService"/>.
+    /// What services add to the scene editor's viewport toolbar: a button per tool of each <see cref="IEditorGameToolService"/>,
+    /// then the controls of each <see cref="IEditorGameToolbarService"/>.
     /// </summary>
     public class EditorToolsViewModel : DispatcherViewModel
     {
+        private static readonly ILogger Logger = GlobalLogger.GetLogger("Scene");
+
         private readonly ObservableList<EditorToolViewModel> tools = new ObservableList<EditorToolViewModel>();
+        private readonly ObservableList<FrameworkElement> toolbarItems = new ObservableList<FrameworkElement>();
 
         public EditorToolsViewModel([NotNull] IViewModelServiceProvider serviceProvider, [NotNull] IEditorGameController controller)
             : base(serviceProvider)
@@ -33,10 +39,27 @@ namespace Stride.Assets.Presentation.AssetEditors.EntityHierarchyEditor.ViewMode
                     foreach (var tool in service.Tools)
                         tools.Add(new EditorToolViewModel(ServiceProvider, tool));
                 }
+                foreach (var service in controller.GetServices<IEditorGameToolbarService>())
+                {
+                    // A plugin's controls failing to build must not take the toolbar with them
+                    try
+                    {
+                        toolbarItems.AddRange(service.CreateToolbarItems());
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Error($"Unable to create the toolbar controls of [{service.GetType().Name}]", e);
+                    }
+                }
             });
         }
 
         public IReadOnlyObservableList<EditorToolViewModel> Tools => tools;
+
+        /// <summary>
+        /// The controls of the <see cref="IEditorGameToolbarService"/>s, shown as they are.
+        /// </summary>
+        public IReadOnlyObservableList<FrameworkElement> ToolbarItems => toolbarItems;
     }
 
     /// <summary>

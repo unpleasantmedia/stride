@@ -512,6 +512,14 @@
                   </DataTemplate>
                 </ItemsControl.ItemTemplate>
               </ItemsControl>
+              <!-- Controls of the services' own (IEditorGameToolbarService), shown as they are -->
+              <ItemsControl ItemsSource="{Binding Tools.ToolbarItems}" Focusable="False">
+                <ItemsControl.ItemsPanel>
+                  <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal"/>
+                  </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+              </ItemsControl>
               <!-- Grid -->
               <ToggleButton x:Name="ToggleGrid" Content="{sd:Image {StaticResource ImageGrid}, 16, 16, NearestNeighbor}"
                             ToolTip="{sd:Localize Viewport grid settings..., Context=ToolTip}" sd:ToolTipHelper.Status="{Binding Session.Editor.Status}" ToolTipService.ShowOnDisabled="True"

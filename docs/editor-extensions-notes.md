@@ -95,6 +95,18 @@ Already supported by the engine:
 - Scene editor toolbar: `sources/editor/Stride.Assets.Presentation.Wpf/AssetEditors/EntityHierarchyEditor/Views/EntityHierarchyEditorView.xaml` (`ToolBarTray` ~line 193). Also a fork change.
 - Custom asset editors: docs/editor/custom-editor.md. Other docs: docs/editor/{README,projects,editors,navigation,undo-redo}.md.
 
+## Adding to the scene viewport toolbar from a plugin
+
+Three hooks, all editor game services declared with `[EditorGameService(typeof(EntityHierarchyEditorController))]` (interfaces in `.../EntityHierarchyEditor/Services/`, shown by `EditorToolsViewModel` / `EditorOverlaysViewModel` and `EntityHierarchyEditorView.xaml`):
+
+| Hook | Shows as | Use for | Notes |
+|---|---|---|---|
+| `IEditorGameToolService` (fork) | A toggle button per `EditorTool`, at the start of the viewport toolbar | Modes (Roads' draw mode) | The tool raises `ActiveChanged` when it turns on or off another way, and the button follows. |
+| `IEditorGameOverlayService` (upstream) | A checkbox per `EditorOverlay` in the Overlays popup | Things a service draws | One way only: the popup can't follow a change made elsewhere, and the state is saved with the scene. Not for modes. |
+| `IEditorGameToolbarService` (fork) | Any WPF controls the service makes, after the tool buttons | Anything else (drop-downs, several buttons) | `CreateToolbarItems()` is called once on the UI thread after the game content loads; the service keeps its controls up to date. |
+
+Finding the toolbar in the visual tree and inserting a control (tried on stride-roads branch `toolbar-experiments`, `RoadDrawButtonInjector`) works too, but breaks silently when the XAML changes: use `IEditorGameToolbarService` instead.
+
 ## Proof of change (done, reverted)
 
 A startup log line and `%TEMP%\stride-fork-proof.txt` marker in `Stride.GameStudio/Program.cs` (after `GlobalLogBuffer.Instance.Start()`) appeared ~9s after launch; edit reverted.
