@@ -19,6 +19,7 @@ using Stride.Assets.Presentation.AssetEditors.SceneEditor.ViewModels;
 using Stride.Assets.Presentation.SceneEditor;
 using Stride.Editor.EditorGame.Game;
 using Stride.Engine;
+using Stride.Engine.Design;
 using Stride.Input;
 using Stride.Rendering;
 using Stride.Rendering.Compositing;
@@ -247,13 +248,14 @@ namespace Stride.Assets.Presentation.AssetEditors.EntityHierarchyEditor.Game
         }
 
         /// <summary>
-        /// The given entity if it can be selected, else its nearest ancestor that can: an entity made at edit time
-        /// (by a processor) is not part of the asset, and stands for the entity it was made under.
+        /// The given entity if it can be selected, else the nearest one it stands for that can: an entity made at edit
+        /// time (by a processor) is not part of the asset, and stands for its <see cref="GeneratedEntity.OwnerKey"/>,
+        /// else for the entity it is under.
         /// </summary>
         private Entity SelectableOrAncestor(Entity entity)
         {
             while (entity != null && !SelectableIds.Contains(Editor.Controller.GetAbsoluteId(entity)))
-                entity = entity.Transform.Parent?.Entity;
+                entity = entity.Tags.Get(GeneratedEntity.OwnerKey) ?? entity.Transform.Parent?.Entity;
             return entity;
         }
 
