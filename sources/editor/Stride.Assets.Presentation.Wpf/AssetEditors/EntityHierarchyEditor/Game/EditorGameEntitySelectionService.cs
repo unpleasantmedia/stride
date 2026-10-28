@@ -19,6 +19,7 @@ using Stride.Assets.Presentation.AssetEditors.SceneEditor.ViewModels;
 using Stride.Assets.Presentation.SceneEditor;
 using Stride.Editor.EditorGame.Game;
 using Stride.Engine;
+using Stride.Engine.Design;
 using Stride.Input;
 using Stride.Rendering;
 using Stride.Rendering.Compositing;
@@ -244,6 +245,29 @@ namespace Stride.Assets.Presentation.AssetEditors.EntityHierarchyEditor.Game
         {
             var entityId = Editor.Controller.GetAbsoluteId(entity);
             return SelectedIds.Contains(entityId);
+        }
+
+        /// <summary>
+        /// The given entity if it can be selected, else the nearest one it stands for that can: an entity made at edit
+        /// time (by a processor) is not part of the asset, and stands for its <see cref="GeneratedEntity.OwnerKey"/>,
+        /// else for the entity it is under.
+        /// </summary>
+        private Entity SelectableOrAncestor(Entity entity)
+        {
+            while (entity != null)
+            {
+                // The owner first: a generated entity is usually in no edited scene (the scene instance's root), and
+                // the controller can only give ids of entities that are.
+                if (entity.Tags.Get(GeneratedEntity.OwnerKey) is { } owner)
+                {
+                    entity = owner;
+                    continue;
+                }
+                if (SelectableIds.Contains(Editor.Controller.GetAbsoluteId(entity)))
+                    return entity;
+                entity = entity.Transform.Parent?.Entity;
+            }
+            return null;
         }
 
         public EntityPickingResult Pick()
@@ -487,6 +511,8 @@ namespace Stride.Assets.Presentation.AssetEditors.EntityHierarchyEditor.Game
                             {
                                 entityUnderMouse = instancing.GetInstanceAt(entityPicked.InstanceId)?.Entity ?? entityUnderMouse;
                             }
+
+                            entityUnderMouse = SelectableOrAncestor(entityUnderMouse);
                         }
 
                         // Ctrl + click on an empty area: do nothing
@@ -611,13 +637,7 @@ namespace Stride.Assets.Presentation.AssetEditors.EntityHierarchyEditor.Game
             public override bool IsVisible(RenderObject renderObject, RenderView renderView, RenderViewStage renderViewStage)
             {
                 var entity = (renderObject.Source as EntityComponent)?.Entity;
-                if (entity != null)
-                {
-                    var entityId = service.Editor.Controller.GetAbsoluteId(entity);
-                    return service.SelectableIds.Contains(entityId);
-                }
-
-                return false;
+                return entity != null && service.SelectableOrAncestor(entity) != null;
             }
         }
     }

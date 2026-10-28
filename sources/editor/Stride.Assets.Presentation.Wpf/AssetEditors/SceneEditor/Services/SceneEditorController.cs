@@ -18,6 +18,7 @@ using Stride.Assets.Presentation.AssetEditors.SceneEditor.Game;
 using Stride.Assets.Presentation.AssetEditors.SceneEditor.ViewModels;
 using Stride.Editor.EditorGame.Game;
 using Stride.Engine;
+using Stride.Engine.Design;
 using Stride.Shaders.Compiler;
 
 namespace Stride.Assets.Presentation.AssetEditors.SceneEditor.Services
@@ -206,6 +207,9 @@ namespace Stride.Assets.Presentation.AssetEditors.SceneEditor.Services
         /// <inheritdoc />
         public override AbsoluteId GetAbsoluteId(Entity entity)
         {
+            // A generated entity (made by a processor, in no edited scene) stands for its owner
+            while (entity.Tags.Get(GeneratedEntity.OwnerKey) is { } owner)
+                entity = owner;
             lock (lookupMutex)
             {
                 var sceneId = entity.Scene.Id;

@@ -1,0 +1,12 @@
+[submodule "sources/plugins/Roads"]
+	path = sources/plugins/Roads
+	url = https://github.com/unpleasantmedia/stride-roads.git
+	branch = main
+[submodule "sources/plugins/Terrain"]
+	path = sources/plugins/Terrain
+	url = https://github.com/unpleasantmedia/stride-terrain.git
+	branch = main
+[submodule "sources/plugins/Water"]
+	path = sources/plugins/Water
+	url = https://github.com/unpleasantmedia/stride-water.git
+	branch = main

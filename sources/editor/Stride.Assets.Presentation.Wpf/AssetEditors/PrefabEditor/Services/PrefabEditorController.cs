@@ -15,6 +15,7 @@ using Stride.Assets.Presentation.AssetEditors.PrefabEditor.Game;
 using Stride.Assets.Presentation.AssetEditors.PrefabEditor.ViewModels;
 using Stride.Editor.EditorGame.Game;
 using Stride.Engine;
+using Stride.Engine.Design;
 using Stride.Shaders.Compiler;
 
 namespace Stride.Assets.Presentation.AssetEditors.PrefabEditor.Services
@@ -119,6 +120,9 @@ namespace Stride.Assets.Presentation.AssetEditors.PrefabEditor.Services
         /// <inheritdoc />
         public override AbsoluteId GetAbsoluteId(Entity entity)
         {
+            // A generated entity (made by a processor, in no edited scene) stands for its owner
+            while (entity.Tags.Get(GeneratedEntity.OwnerKey) is { } owner)
+                entity = owner;
             return new AbsoluteId(Asset.Id, entity.Id);
         }
 

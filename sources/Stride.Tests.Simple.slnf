@@ -13,6 +13,8 @@
       "sources\\core\\Stride.Core.Yaml.Tests\\Stride.Core.Yaml.Tests.csproj",
       "sources\\editor\\Stride.Core.Assets.Editor.Tests\\Stride.Core.Assets.Editor.Tests.csproj",
       "sources\\editor\\Stride.GameStudio.Tests\\Stride.GameStudio.Tests.csproj",
+      "sources\\plugins\\Roads\\Stride.Roads.Tests\\Stride.Roads.Tests.csproj",
+      "sources\\plugins\\Terrain\\Stride.Terrain.Tests\\Stride.Terrain.Tests.csproj",
       "sources\\presentation\\Stride.Core.Presentation.Quantum.Tests\\Stride.Core.Presentation.Quantum.Tests.csproj",
       "sources\\presentation\\Stride.Core.Presentation.Wpf.Tests\\Stride.Core.Presentation.Wpf.Tests.csproj",
       "sources\\presentation\\Stride.Core.Quantum.Tests\\Stride.Core.Quantum.Tests.csproj",

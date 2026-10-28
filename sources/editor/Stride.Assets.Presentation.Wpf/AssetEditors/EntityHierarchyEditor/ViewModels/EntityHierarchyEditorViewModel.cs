@@ -63,6 +63,7 @@ namespace Stride.Assets.Presentation.AssetEditors.EntityHierarchyEditor.ViewMode
             Transform = new EntityTransformationViewModel(ServiceProvider, Controller);
             Grid = new EditorGridViewModel(ServiceProvider, Controller);
             Overlays = new EditorOverlaysViewModel(ServiceProvider, Controller);
+            Tools = new EditorToolsViewModel(ServiceProvider, Controller);
             Lighting = new EditorLightingViewModel(ServiceProvider, Controller, this);
             Rendering = new EditorRenderingViewModel(ServiceProvider, Controller);
             EntityGizmos = new EntityGizmosViewModel(ServiceProvider, Controller);
@@ -113,6 +114,9 @@ namespace Stride.Assets.Presentation.AssetEditors.EntityHierarchyEditor.ViewMode
 
         [NotNull]
         public EditorOverlaysViewModel Overlays { get; }
+
+        [NotNull]
+        public EditorToolsViewModel Tools { get; }
 
         [NotNull]
         public EditorRenderingViewModel Rendering { get; }

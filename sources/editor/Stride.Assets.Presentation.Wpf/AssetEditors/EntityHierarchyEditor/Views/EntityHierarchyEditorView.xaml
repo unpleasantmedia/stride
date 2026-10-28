@@ -492,6 +492,35 @@
         <Border Background="{StaticResource BackgroundBrush}" DockPanel.Dock="Top" Padding="8,2">
           <DockPanel>
             <WrapPanel HorizontalAlignment="Right" DockPanel.Dock="Right">
+              <!-- Tools (modes the editor game services offer, such as drawing roads) -->
+              <ItemsControl ItemsSource="{Binding Tools.Tools}" Focusable="False">
+                <ItemsControl.ItemsPanel>
+                  <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal"/>
+                  </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate DataType="{x:Type ehvm:EditorToolViewModel}">
+                    <ToggleButton IsChecked="{Binding IsActive}" ToolTip="{Binding DisplayName}" MinWidth="28" Height="28" Background="Transparent"
+                                  Visibility="{Binding IsAvailable, Converter={sd:VisibleOrCollapsed}}">
+                      <Grid>
+                        <Image Source="{Binding Icon}" Width="16" Height="16" RenderOptions.BitmapScalingMode="NearestNeighbor"
+                               Visibility="{Binding HasIcon, Converter={sd:VisibleOrCollapsed}}"/>
+                        <TextBlock Text="{Binding DisplayName}" Margin="4,0" VerticalAlignment="Center"
+                                   Visibility="{Binding HasIcon, Converter={sd:Chained {sd:InvertBool}, {sd:VisibleOrCollapsed}}}"/>
+                      </Grid>
+                    </ToggleButton>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+              <!-- Controls of the services' own (IEditorGameToolbarService), shown as they are -->
+              <ItemsControl ItemsSource="{Binding Tools.ToolbarItems}" Focusable="False">
+                <ItemsControl.ItemsPanel>
+                  <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal"/>
+                  </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+              </ItemsControl>
               <!-- Grid -->
               <ToggleButton x:Name="ToggleGrid" Content="{sd:Image {StaticResource ImageGrid}, 16, 16, NearestNeighbor}"
                             ToolTip="{sd:Localize Viewport grid settings..., Context=ToolTip}" sd:ToolTipHelper.Status="{Binding Session.Editor.Status}" ToolTipService.ShowOnDisabled="True"

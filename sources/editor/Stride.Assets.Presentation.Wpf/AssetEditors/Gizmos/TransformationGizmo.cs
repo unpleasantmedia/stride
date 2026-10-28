@@ -9,6 +9,7 @@ using Stride.Assets.Presentation.AssetEditors.EntityHierarchyEditor.Game;
 using Stride.Assets.Presentation.AssetEditors.GameEditor;
 using Stride.Assets.Presentation.AssetEditors.GameEditor.Game;
 using Stride.Engine;
+using Stride.Engine.Design;
 using Stride.Engine.Processors;
 using Stride.Graphics;
 using Stride.Input;
@@ -207,7 +208,9 @@ namespace Stride.Assets.Presentation.AssetEditors.Gizmos
                     }
                     
                     // We don't use the entity's "WorldMatrix" because its scale could be zero, which would break the gizmo.
+                    // Its rotation is shown in the frame a processor says it is relative to (GizmoFrame), if any.
                     worldMatrix = Matrix.RotationQuaternion(AnchorEntity.Transform.Rotation) *
+                                  Matrix.RotationQuaternion(GizmoFrame.BaseRotation(AnchorEntity)) *
                                   Matrix.Translation(AnchorEntity.Transform.Position) *
                                   parentMatrix;
                     break;
@@ -470,6 +473,8 @@ namespace Stride.Assets.Presentation.AssetEditors.Gizmos
                     entityTransfo.Position = initialTransfo.Translation + Vector3.TransformNormal(elementTranslationGizmo, gizmoToParentMatrix);
 
                     var rotationAxisParent = Vector3.Normalize(Vector3.TransformNormal(transformation.Rotation.Axis, gizmoToParentMatrix));
+                    // Turning about an axis of the frame its rotation is relative to (GizmoFrame) is turning its own rotation about that axis taken back out of the frame.
+                    rotationAxisParent = Vector3.Transform(rotationAxisParent, Quaternion.Invert(GizmoFrame.BaseRotation(entity)));
                     entityTransfo.Rotation = initialTransfo.Rotation * Quaternion.RotationAxis(rotationAxisParent, transformation.Rotation.Angle);
                 }
             }
