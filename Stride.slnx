@@ -228,6 +228,11 @@
     <Project Path="sources/plugins/Roads/Stride.Roads.Tests/Stride.Roads.Tests.csproj" />
     <Project Path="sources/plugins/Roads/Stride.Roads/Stride.Roads.csproj" />
   </Folder>
+  <Folder Name="/80-Plugins/Terrain/">
+    <Project Path="sources/plugins/Terrain/Stride.Terrain.Editor/Stride.Terrain.Editor.csproj" />
+    <Project Path="sources/plugins/Terrain/Stride.Terrain.Tests/Stride.Terrain.Tests.csproj" />
+    <Project Path="sources/plugins/Terrain/Stride.Terrain/Stride.Terrain.csproj" />
+  </Folder>
   <Folder Name="/80-Plugins/SpriteStudio/">
     <Project Path="sources/plugins/SpriteStudio/Stride.SpriteStudio.Assets/Stride.SpriteStudio.Assets.csproj" />
     <Project Path="sources/plugins/SpriteStudio/Stride.SpriteStudio.Editor/Stride.SpriteStudio.Editor.csproj" />
