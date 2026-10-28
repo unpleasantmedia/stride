@@ -196,7 +196,8 @@ namespace Stride.Rendering
                 // Get effect
                 // TODO: Use real effect slot
                 var renderEffect = renderNode.RenderEffect;
-                if (renderEffect.Effect == null)
+                // Not compiled yet, or its reflection not updated yet (see RootEffectRenderFeature.Prepare)
+                if (renderEffect.Effect == null || renderEffect.Reflection == null)
                     continue;
 
                 var drawData = GetDrawData(renderMesh, renderEffect);

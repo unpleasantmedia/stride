@@ -6,3 +6,7 @@
 	path = sources/plugins/Terrain
 	url = https://github.com/unpleasantmedia/stride-terrain.git
 	branch = main
+[submodule "sources/plugins/Water"]
+	path = sources/plugins/Water
+	url = https://github.com/unpleasantmedia/stride-water.git
+	branch = main

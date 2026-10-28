@@ -59,6 +59,11 @@ namespace Stride.Rendering
 
         private static readonly ProfilingKey CompileEffectsKey = new ProfilingKey($"{nameof(RootEffectRenderFeature)}.CompileEffects");
         private static readonly ProfilingKey UpdateReflectionInfosKey = new ProfilingKey($"{nameof(RootEffectRenderFeature)}.UpdateReflectionInfos");
+        private static readonly Logger Log = GlobalLogger.GetLogger(nameof(RootEffectRenderFeature));
+
+        // Whether a missing reflection has been told of (once, as it can be every frame).
+        private static int reportedMissingReflection;
+
         private static readonly ProfilingKey PrepareEffectPermutationsKey = new ProfilingKey($"{nameof(RootEffectRenderFeature)}.PrepareEffectPermutations");
 
         // Common slots
@@ -736,9 +741,12 @@ namespace Stride.Rendering
                     var staticEffectObjectNode = staticObjectNode * effectSlotCount + effectSlots[renderNode.RenderStage.Index].Index;
                     var renderEffect = renderEffects[staticEffectObjectNode];
 
-                    // Not compiled yet?
-                    if (renderEffect.Effect == null)
+                    // Not compiled yet? Or with an effect but no reflection for it yet (seen while an effect kept failing
+                    // to compile in the background): skipped until it has one, as if compiling, rather than failing the frame.
+                    if (renderEffect.Effect == null || renderEffect.Reflection == null)
                     {
+                        if (renderEffect.Effect != null && Interlocked.Exchange(ref reportedMissingReflection, 1) == 0)
+                            Log.Warning($"Effect [{renderEffect.EffectSelector.EffectName}] of [{renderObject}] in stage [{renderNode.RenderStage.Name}] has no reflection yet; skipped until it has.");
                         renderNode.RenderEffect = renderEffect;
                         renderNode.EffectObjectNode = EffectObjectNodeReference.Invalid;
                         renderNode.Resources = null;

@@ -121,6 +121,12 @@
     <ProjectReference Include="..\..\plugins\Terrain\Stride.Terrain.Editor\Stride.Terrain.Editor.csproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+    <ProjectReference Include="..\..\plugins\Water\Stride.Water\Stride.Water.csproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\..\plugins\Water\Stride.Water.Editor\Stride.Water.Editor.csproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
     <ProjectReference Include="..\..\plugins\Voxels\Stride.Voxels\Stride.Voxels.csproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
